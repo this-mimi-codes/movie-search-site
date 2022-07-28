@@ -31,7 +31,7 @@ window.loadMovies = async function loadMovies(searchTerm) {
   if (data.Response === 'True') displayMovieList(data.Search);
 };
 
-const input = prompt("What's your API Key?");
+const input = import.meta.env.VITE_API_KEY;
 
 window.findMovies = function findMovies() {
   const searchTerm = movieSearchBox.value.trim();
@@ -52,7 +52,7 @@ window.displayMovieList = function displayMovieList(movies) {
     movieListItem.innerHTML = `
         <div class="search-list-item">
         <div class="search-item-thumbnail">
-          <img src="https://cdn.pixabay.com/photo/2015/12/09/17/12/popcorn-1085072_960_720.jpg" alt="movie theater popcorn">
+          <img src="${movies[idx].Poster}" alt="movie poster">
         </div>
         <div class="search-item-info">
           <h3>${movies[idx].Title}</h3>
@@ -84,12 +84,11 @@ window.loadMovieDetails = function loadMovieDetails() {
 window.displayMovieDetails = function displayMovieDetails(details) {
   resultGrid.innerHTML = `
     <div class="movie-poster">
-              <img src="https://cdn.pixabay.com/photo/2015/12/09/17/12/popcorn-1085072_960_720.jpg" alt="popcorn">
-            </div>
+             <img src="${details.Poster}">            </div>
             <div class="movie-info">
               <h3 class="movie-title">${details.Title}</h3>
               <ul class="movie-misc-info">
-                <li class="year">Year: ${details.Year}</li>
+                  <li class="year">Year: ${details.Year}</li>
                 <li class="rated">Ratings: ${details.Rated}</li>
                 <li class="released">Released: ${details.Released}</li>
               </ul>

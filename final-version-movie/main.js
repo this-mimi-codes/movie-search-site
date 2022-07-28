@@ -1,9 +1,10 @@
-import { doc } from "prettier";
-import "./style.css";
+import { doc } from 'prettier';
+import './style.css';
+import javascriptLogo from './streaming.jpg'
 
-const movieSearchBox = document.getElementById("movie-search-box");
-const searchList = document.getElementById("search-list");
-const resultGrid = document.getElementById("result-grid");
+const movieSearchBox = document.getElementById('movie-search-box');
+const searchList = document.getElementById('search-list');
+const resultGrid = document.getElementById('result-grid');
 
 //  let button = document.getElementById("#submit");
 //  button.onkeyup(apiInput)
@@ -11,33 +12,43 @@ const resultGrid = document.getElementById("result-grid");
 // loadJSON(apiKey)
 // }
 
-const input = prompt("What's your API Key?");
+document.querySelector("#logo-header").innerHTML = `
+<div class="logo-heading">
+<a href="https://artistic-dot-homegrown.glitch.me/" target="_blank">
+      <img src="${javascriptLogo}" class="logo vanilla" alt="streaming tv logo" />
+    </a>
+    <h1>Greetings, Movie Lovers!</h1>
+    <h2>Not sure what to look for or want a curated list? Click the logo to visit the recommendation site!</h2>
+</div>
+`
 
-//load movies from API
-window.loadMovies = async function loadMovies(searchTerm) {
+// load movies from API
+window.loadMovies = async function loadMovies(searchTerm) {  
   const URL = `https://www.omdbapi.com/?s=${searchTerm}&page=1&apikey=${input}`;
   const res = await fetch(`${URL}`);
   const data = await res.json();
   // console.log(data.Search);
-  if (data.Response == "True") displayMovieList(data.Search);
+  if (data.Response === 'True') displayMovieList(data.Search);
 };
 
+const input = prompt("What's your API Key?");
+
 window.findMovies = function findMovies() {
-  let searchTerm = movieSearchBox.value.trim();
+  const searchTerm = movieSearchBox.value.trim();
   if (searchTerm.length > 0) {
-    searchList.classList.remove("hide-search-list");
+    searchList.classList.remove('hide-search-list');
     loadMovies(searchTerm);
   } else {
-    searchList.classList.add("hide-search-list");
+    searchList.classList.add('hide-search-list');
   }
 };
 
 window.displayMovieList = function displayMovieList(movies) {
-  searchList.innerHTML = "";
+  searchList.innerHTML = '';
   for (let idx = 0; idx < movies.length; idx++) {
-    let movieListItem = document.createElement("div");
+    const movieListItem = document.createElement('div');
     movieListItem.dataset.id = movies[idx].imdbID;
-    movieListItem.classList.add("search-list-item");
+    movieListItem.classList.add('search-list-item');
     movieListItem.innerHTML = `
         <div class="search-list-item">
         <div class="search-item-thumbnail">
@@ -54,14 +65,14 @@ window.displayMovieList = function displayMovieList(movies) {
 };
 
 window.loadMovieDetails = function loadMovieDetails() {
-  const searchListMovies = searchList.querySelectorAll(".search-list-item");
+  const searchListMovies = searchList.querySelectorAll('.search-list-item');
   searchListMovies.forEach((movie) => {
-    movie.addEventListener("click", async () => {
+    movie.addEventListener('click', async () => {
       //  console.log(movie.dataset.id)
-      searchList.classList.add("hide-search-list");
-      movieSearchBox.value = "";
+      searchList.classList.add('hide-search-list');
+      movieSearchBox.value = '';
       const result = await fetch(
-        `http://www.omdbapi.com/?i=${movie.dataset.id}&apikey=b80a57a3`
+        `http://www.omdbapi.com/?i=${movie.dataset.id}&apikey=${input}`,
       );
       const movieDetails = await result.json();
       // console.log(movieDetails)
@@ -92,8 +103,13 @@ window.displayMovieDetails = function displayMovieDetails(details) {
     `;
 };
 
-window.addEventListener("click", (event) => {
-  if (event.target.className != "form-control") {
-    searchList.classList.add("hide-search-list");
+window.addEventListener('click', (event) => {
+  if (event.target.className !== 'form-control') {
+    searchList.classList.add('hide-search-list');
   }
 });
+
+document.querySelector('.footer').innerHTML = `
+Created by A.Alveranga &copy 2022.
+Logo photo by <a href="https://unsplash.com/@introspectivedsgn?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Erik Mclean</a> on <a href="https://unsplash.com/s/photos/movies?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+`

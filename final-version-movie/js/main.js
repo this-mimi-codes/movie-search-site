@@ -1,16 +1,70 @@
 import { doc } from 'prettier';
-import './style.css';
-import javascriptLogo from './streaming.jpg'
+import '../style.css';
+import javascriptLogo from '../streaming.jpg'
+import store from './store/index.js';
+import WebComponent from './comment.js';
+import { openDB } from 'idb';
+import Note from './component/notes';
+
+window.addEventListener('DOMContentLoaded', async () => {
+  //set up the database
+  openDB('comment-store', 1, {
+    upgrade(db) {
+      //create comment object store
+      db.createObjectStore('comments', {autoIncrement: true});
+    },
+  });
+  //get comments from db/add to state
+  const db = await openDB('comment-store', 1);
+  const comments = ((await db.getAll('comments')) || {});
+  for(let i = 0; i < comments.length; i++) {
+    store.dispatch('addComment', comments[i]);
+  }
+  db.close();
+})
+
+const formElement = document.querySelector('.comment-form');
+const nameElement = document.querySelector('#name');
+const emailElement = document.querySelector('#email');
+const commentElement = document.querySelector('#comment');
+
+formElement.addEventListener('submit', async (evt) => {
+  evt.preventDefault();
+
+  let name = nameElement.value.trim();
+  let email = emailElement.value.trim();
+  let contents = commentElement.value.trim();
+  if (name.length && email.length && comment.length) {
+    let comment = { name: name, email: email, comment: comments }
+    // Add comment to state
+    store.dispatch('addComment', comment);
+    // Add comment to database
+    const db = await openDB('comment-store', 1);
+    await db.put('comments', comment);
+    db.close();
+    //to receive another comment
+    commentElement.value = '';
+    commentElement.focus();
+  }
+});
+
+const commentInstance = new WebComponent();
+const noteInstance = new Note();
+commentInstance.render();
+noteInstance.render();
+
+const noteElement = document.querySelector('.notes');
+const noteValue = document.querySelector('#note');
+noteElement.addEventListener('submit', async (evt) => {
+  evt.preventDefault();
+  let note = noteValue.value.trim();
+  store.dispatch('editNote', note);
+});
 
 const movieSearchBox = document.getElementById('movie-search-box');
 const searchList = document.getElementById('search-list');
 const resultGrid = document.getElementById('result-grid');
 
-//  let button = document.getElementById("#submit");
-//  button.onkeyup(apiInput)
-// function apiInput() {
-// loadJSON(apiKey)
-// }
 
 document.querySelector("#logo-header").innerHTML = `
 <div class="logo-heading">

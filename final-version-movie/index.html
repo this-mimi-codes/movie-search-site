@@ -67,9 +67,31 @@
             </div>
           </div>
         </div>
+        <div class="comment-form">
+          <h2 slot="title">Comments</h2>
+          <form>
+            <label for="name">Name: </label>
+            <input slot="name" id="name"/>
+            <label for="email">Email: </label>
+            <input  slot="email" type="email" id="email"/>
+            <label for="comment">Leave your comment...</label>
+            <textarea slot="comment" id="comment"></textarea>
+            <button type="submit">Add comment</button>
+          </form>
+          </div>
+          
+          <div>
+            <form class='notes'>
+              <label for='note'>Your Note:</label>
+              <input type="text" id='note' value='This was ridiculous'>
+              <button type='submit'>Save Note</button>
+            </form>
+          </div>
+        
+        <web-component></web-component>
       </div>
-    </div>
+     </div>
     <div class="footer"></div>
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="./js/main.js"></script>
   </body>
 </html>
